@@ -5,4 +5,8 @@ RB_ADD_GBENCHMARK(GenVectorBenchmarks
   MathCore)
 
  add_test(NAME rootbench-GenVectorBenchmarks
-		COMMAND GenVectorBenchmarks --benchmark_out_format=json)
+		COMMAND GenVectorBenchmarks
+		--benchmark_out_format=json
+		--benchmark_out=rootbench-GenVectorBenchmarks.json
+		--benchmark_color=false
+		)

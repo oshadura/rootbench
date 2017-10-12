@@ -5,4 +5,8 @@ RB_ADD_GBENCHMARK(IOBenchmarks
   )
  
  add_test(NAME rootbench-IOBenchmarks
-		COMMAND IOBenchmarks --benchmark_out_format=json)
+	COMMAND IOBenchmarks
+	--benchmark_out_format=json
+    --benchmark_out=rootbench-IOBenchmarks.json
+    --benchmark_color=false
+    )
