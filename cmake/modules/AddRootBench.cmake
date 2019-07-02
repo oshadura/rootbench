@@ -24,19 +24,43 @@ function(RB_ADD_GBENCHMARK benchmark)
       add_dependencies(${benchmark} flamegraph-download)
   endif()
   if(${ARG_LABEL} STREQUAL "long")
-    set(${TIMEOUT_VALUE} 1200)
-  elseif($ARG_LABEL STREQUAL "short")
-    set(${TIMEOUT_VALUE} 3600)
+    set(TIMEOUT_VALUE 1200)
+  elseif(${ARG_LABEL} STREQUAL "short")
+    set(TIMEOUT_VALUE 3600)
   endif()
-  ROOT_ADD_TEST(rootbench-${benchmark}
-    COMMAND ${benchmark} --benchmark_out_format=csv --benchmark_out=rootbench-${benchmark}.csv --benchmark_color=false
-    WORKING_DIR ${CMAKE_CURRENT_BINARY_DIR}
-    POSTCMD ${postcmd}
-    ENVIRONMENT LD_LIBRARY_PATH=${ROOT_LIBRARY_DIR}:$ENV{LD_LIBRARY_PATH}
-    TIMEOUT "${TIMEOUT_VALUE}"
-    LABELS "${ARG_LABEL}"
-    RUN_SERIAL TRUE
-    )
+
+  set(RB_TESTS_${benchmark} RB_TESTS_${benchmark} CACHE STRING "")
+
+  add_custom_command(
+    COMMAND ${CMAKE_COMMAND}
+    -Dbenchmark="${benchmark}"
+    -Dcurrent_binary_dir="${CMAKE_CURRENT_BINARY_DIR}"
+    -Dbinary_dir="${CMAKE_BINARY_DIR}"
+    -P ${PROJECT_SOURCE_DIR}/cmake/modules/DumpConfigRootBench.cmake
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT  ${benchmark}ListOfBenchmarks.cmake
+    DEPENDS ${benchmark})
+
+  add_custom_target(
+      ${benchmark}-cmake-registration ALL
+      DEPENDS ${benchmark}ListOfBenchmarks.cmake)
+
+  add_dependencies(${benchmark}-cmake-registration ${benchmark})
+
+  add_custom_command(TARGET ${benchmark}-cmake-registration
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND}
+    -Dbenchmark="${benchmark}"
+    -DRB_TESTS_${benchmark}=${${RB_TESTS_${benchmark}}}
+    -DCMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}"
+    -DTIMEOUT_VALUE="${TIMEOUT_VALUE}"
+    -DARG_LABEL="${ARG_LABEL}"
+    -Dpostcmd="${postcmd}"
+    -DCMAKE_MODULE_PATH="${CMAKE_MODULE_PATH}"
+    -P ${PROJECT_SOURCE_DIR}/cmake/modules/RegisterRootBench.cmake
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    DEPENDS ${benchmark}-cmake-registration)
+
 endfunction(RB_ADD_GBENCHMARK)
 
 #----------------------------------------------------------------------------

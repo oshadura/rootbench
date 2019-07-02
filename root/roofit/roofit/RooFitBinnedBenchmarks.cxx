@@ -4,6 +4,7 @@
 #include "RooMinimizer.h"
 #include "TFile.h"
 #include "TH1.h"
+#include "TEnv.h"
 #include "TRandom.h"
 #include "TError.h"
 #include "RooStats/HistFactory/Measurement.h"
@@ -20,6 +21,7 @@ using namespace HistFactory;
 
 Sample addVariations(Sample asample, int nnps, bool channel_crosstalk, int channel)
 {
+   gEnv->SetValue("RooFit.Banner",0);
    for (int nuis = 0; nuis < nnps; ++nuis) {
       TRandom *R = new TRandom(channel * nuis / nnps);
       Double_t random = R->Rndm();
@@ -38,6 +40,7 @@ Sample addVariations(Sample asample, int nnps, bool channel_crosstalk, int chann
 
 Channel makeChannel(int channel, int nbins, int nnps)
 {
+   gEnv->SetValue("RooFit.Banner",0);
    std::string channel_name = "Region" + std::to_string(channel);
    Channel chan(channel_name);
    auto Signal_Hist = new TH1F("Signal", "Signal", nbins, 0, nbins);
@@ -75,6 +78,7 @@ Channel makeChannel(int channel, int nbins, int nnps)
 
 void buildBinnedTest(int n_channels = 1, int nbins = 10, int nnps = 1, const char *name_rootfile = "")
 {
+   gEnv->SetValue("RooFit.Banner",0);
    std::cout << "in build binned test with output" << name_rootfile << std::endl;
    Measurement meas("meas", "meas");
    meas.SetPOI("SignalStrength");
@@ -111,6 +115,7 @@ void buildBinnedTest(int n_channels = 1, int nbins = 10, int nnps = 1, const cha
 
 static void BM_RooFit_BinnedTestMigrad_NChannel(benchmark::State &state)
 {
+   gEnv->SetValue("RooFit.Banner",0);
    gErrorIgnoreLevel = kInfo;
    RooMsgService::instance().setGlobalKillBelow(RooFit::FATAL);
    RooMsgService::instance().getStream(1).removeTopic(RooFit::Minimization);
@@ -146,7 +151,7 @@ static void BM_RooFit_BinnedTestMigrad_NChannel(benchmark::State &state)
 
 static void BM_RooFit_BinnedTestHesse_NChannel(benchmark::State &state)
 {
-
+   gEnv->SetValue("RooFit.Banner",0);
    gErrorIgnoreLevel = kInfo;
    RooMsgService::instance().setGlobalKillBelow(RooFit::FATAL);
    RooMsgService::instance().getStream(1).removeTopic(RooFit::Minimization);
@@ -186,7 +191,7 @@ static void BM_RooFit_BinnedTestHesse_NChannel(benchmark::State &state)
 
 static void BM_RooFit_BinnedTestMinos_NChannel(benchmark::State &state)
 {
-
+   gEnv->SetValue("RooFit.Banner",0);
    gErrorIgnoreLevel = kInfo;
    RooMsgService::instance().setGlobalKillBelow(RooFit::FATAL);
    RooMsgService::instance().getStream(1).removeTopic(RooFit::Minimization);
@@ -256,6 +261,7 @@ BENCHMARK(BM_RooFit_BinnedTestMinos_NChannel)
 
 static void BM_RooFit_BinnedTestMigrad_NBin(benchmark::State &state)
 {
+   gEnv->SetValue("RooFit.Banner",0);
    gErrorIgnoreLevel = kInfo;
    RooMsgService::instance().setGlobalKillBelow(RooFit::FATAL);
    RooMsgService::instance().getStream(1).removeTopic(RooFit::Minimization);
@@ -291,6 +297,7 @@ static void BM_RooFit_BinnedTestMigrad_NBin(benchmark::State &state)
 
 static void BM_RooFit_BinnedTestHesse_NBin(benchmark::State &state)
 {
+   gEnv->SetValue("RooFit.Banner",0);
    gErrorIgnoreLevel = kInfo;
    RooMsgService::instance().setGlobalKillBelow(RooFit::FATAL);
    RooMsgService::instance().getStream(1).removeTopic(RooFit::Minimization);
@@ -330,7 +337,7 @@ static void BM_RooFit_BinnedTestHesse_NBin(benchmark::State &state)
 
 static void BM_RooFit_BinnedTestMinos_NBin(benchmark::State &state)
 {
-
+   gEnv->SetValue("RooFit.Banner",0);
    gErrorIgnoreLevel = kInfo;
    RooMsgService::instance().setGlobalKillBelow(RooFit::FATAL);
    RooMsgService::instance().getStream(1).removeTopic(RooFit::Minimization);

@@ -14,6 +14,7 @@
 #include "RooFormulaVar.h"
 #include "RooTruthModel.h"
 #include "TCanvas.h"
+#include "TEnv.h"
 #include "RooPlot.h"
 #include "RooMinimizer.h"
 
@@ -27,6 +28,7 @@ using namespace RooFit;
 
 static void BM_RooFit_BDecayWithMixing(benchmark::State &state)
 {
+   gEnv->SetValue("RooFit.Banner",0);
    gErrorIgnoreLevel = kInfo;
    int events = state.range(0);
    int cpu = state.range(1);
@@ -69,6 +71,7 @@ static void BM_RooFit_BDecayWithMixing(benchmark::State &state)
 
 static void BM_RooFit_BDecayGaussResolution(benchmark::State &state)
 {
+   gEnv->SetValue("RooFit.Banner",0);
    gErrorIgnoreLevel = kInfo;
    int events = state.range(0);
    int cpu = state.range(1);
@@ -119,6 +122,7 @@ static void BM_RooFit_BDecayGaussResolution(benchmark::State &state)
 
 static void BM_RooFit_BDecayDoubleGauss(benchmark::State &state)
 {
+   gEnv->SetValue("RooFit.Banner",0);
    gErrorIgnoreLevel = kInfo;
    int events = state.range(0);
    int cpu = state.range(1);

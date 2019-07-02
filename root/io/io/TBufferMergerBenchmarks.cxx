@@ -50,7 +50,6 @@ static void BM_TBufferFile_GetFile(benchmark::State &state)
    }
 }
 BENCHMARK(BM_TBufferFile_GetFile)->Unit(benchmark::kMicrosecond);
-BENCHMARK(BM_TBufferFile_GetFile)->Unit(benchmark::kMicrosecond)->UseRealTime()->ThreadPerCpu();
 BENCHMARK(BM_TBufferFile_GetFile)
    ->Unit(benchmark::kMicrosecond)
    ->UseRealTime()
@@ -107,8 +106,7 @@ static void BM_TBufferFile_FillTreeWithRandomData(benchmark::State &state)
       delete Merger;
    }
 }
-BENCHMARK(BM_TBufferFile_FillTreeWithRandomData)->Unit(benchmark::kMicrosecond)->Arg(32);
-BENCHMARK(BM_TBufferFile_FillTreeWithRandomData)->Unit(benchmark::kMicrosecond)->Arg(32)->UseRealTime()->ThreadPerCpu();
+//BENCHMARK(BM_TBufferFile_FillTreeWithRandomData)->Unit(benchmark::kMicrosecond)->Arg(32)->UseRealTime()->ThreadPerCpu();
 BENCHMARK(BM_TBufferFile_FillTreeWithRandomData)
    ->Unit(benchmark::kMicrosecond)
    ->Range(1, 32)
